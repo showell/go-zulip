@@ -90,7 +90,7 @@ func test_messages() []ServerMessage {
 
 func TestMessages(t *testing.T) {
 	messages := test_messages()
-	assert.Equal(t, messages[0].Content, "message1")
+	assert.Equal(t, messages[0].Content, "message0")
 }
 
 func TestChannels(t *testing.T) {
