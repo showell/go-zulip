@@ -22,7 +22,11 @@ func main() {
 
     for _, sub := range subs {
         db.AddServerSubscription(sub)
+        // test idempotency
+        index := db.AddServerSubscription(sub)
+        fmt.Println(index)
     }
 
     fmt.Println(db.GetChannelName(101))
+    fmt.Println(db.GetChannelName(102))
 }

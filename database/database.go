@@ -1,26 +1,33 @@
 package database
 
 import "zulip-go/server_types"
+import "zulip-go/channel"
 
 type ServerSubscription = server_types.ServerSubscription
 
 type Database struct {
-    channel_map map[int]string
+    channel_table *channel.ChannelTable
 }
 
 func NewDatabase() *Database {
     return &Database{
-        channel_map: make(map[int]string),
+        channel_table: channel.NewChannelTable(),
     }
 }
 
-func (db *Database) AddServerSubscription(sub ServerSubscription) {
-    channel_id := sub.StreamId
+func (db *Database) AddServerSubscription(sub ServerSubscription) int {
+    id := sub.StreamId
     name := sub.Name
-    db.channel_map[channel_id] = name
+    return db.channel_table.Put(channel.Channel{
+        Id: id,
+        Name: name,
+    })
 }
 
 func (db Database) GetChannelName(channel_id int) string {
-    return db.channel_map[channel_id]
+    row := db.channel_table.RowFromId(channel_id)
+    if row == nil {
+        return "unknown"
+    }
+    return row.Name
 }
-
