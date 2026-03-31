@@ -11,6 +11,7 @@ import (
 	"go-zulip/topic"
 )
 
+type ServerMessage = server_types.ServerMessage
 type ServerSubscription = server_types.ServerSubscription
 
 func TestTopic(t *testing.T) {
@@ -38,7 +39,6 @@ func addTestSubs(t *testing.T, db *database.Database) {
 		},
 	}
 
-
 	for i, sub := range subs {
 		db.AddServerSubscription(sub)
 		// test idempotency
@@ -48,10 +48,55 @@ func addTestSubs(t *testing.T, db *database.Database) {
 
 }
 
-func TestGeneral(t *testing.T) {
+func test_messages() []ServerMessage {
+	return []ServerMessage{
+		{
+			Content:          "message1",
+			Id:               201,
+			Sender_full_name: "Foo Barson",
+			Sender_id:        1001,
+			Subject:          "design stuff",
+			Stream_id:        102,
+		},
+
+		{
+			Content:          "message2",
+			Id:               202,
+			Sender_full_name: "Foo Barson",
+			Sender_id:        1001,
+			Subject:          "design stuff",
+			Stream_id:        102,
+		},
+
+		{
+			Content:          "message3",
+			Id:               203,
+			Sender_full_name: "Fred Flintstone",
+			Sender_id:        1002,
+			Subject:          "feedback & other stuff",
+			Stream_id:        101,
+		},
+
+		{
+			Content:          "message4",
+			Id:               204,
+			Sender_full_name: "Fred Flintstone",
+			Sender_id:        1002,
+			Subject:          "another design topic",
+			Stream_id:        102,
+		},
+	}
+}
+
+func TestMessages(t *testing.T) {
+	messages := test_messages()
+	assert.Equal(t, messages[0].Content, "message1")
+}
+
+func TestChannels(t *testing.T) {
 	db := database.NewDatabase()
 
-    addTestSubs(t, db)
+	addTestSubs(t, db)
 
 	assert.Equal(t, db.ChannelTable.GetName(101), "engineering")
 	assert.Equal(t, db.ChannelTable.GetName(102), "design")
