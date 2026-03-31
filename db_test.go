@@ -5,10 +5,26 @@ import (
 	"testing"
 )
 
-import "go-zulip/database"
-import "go-zulip/server_types"
+import (
+	"go-zulip/database"
+	"go-zulip/server_types"
+	"go-zulip/topic"
+)
 
 type ServerSubscription = server_types.ServerSubscription
+
+func TestTopic(t *testing.T) {
+	table := topic.NewTopicTable()
+
+	table.Put("apple")
+	table.Put("apple")
+	table.Put("apple")
+	table.Put("banana")
+	table.Put("banana")
+
+	assert.Equal(t, table.NameFromIndex(0), "apple")
+	assert.Equal(t, table.NameFromIndex(1), "banana")
+}
 
 func TestGeneral(t *testing.T) {
 	subs := []ServerSubscription{
