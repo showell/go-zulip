@@ -1,8 +1,8 @@
 package main
 
 import "fmt"
-import "zulip-go/database"
-import "zulip-go/server_types"
+import "go-zulip/database"
+import "go-zulip/server_types"
 
 type ServerSubscription = server_types.ServerSubscription
 

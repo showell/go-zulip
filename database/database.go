@@ -1,7 +1,7 @@
 package database
 
-import "zulip-go/server_types"
-import "zulip-go/channel"
+import "go-zulip/server_types"
+import "go-zulip/channel"
 
 type ServerSubscription = server_types.ServerSubscription
 

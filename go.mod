@@ -1,3 +1,3 @@
-module zulip-go
+module go-zulip
 
 go 1.26.1
