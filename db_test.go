@@ -47,6 +47,6 @@ func TestGeneral(t *testing.T) {
 		assert.Equal(t, index, i)
 	}
 
-	assert.Equal(t, db.GetChannelName(101), "engineering")
-	assert.Equal(t, db.GetChannelName(102), "design")
+	assert.Equal(t, db.ChannelTable.GetName(101), "engineering")
+	assert.Equal(t, db.ChannelTable.GetName(102), "design")
 }
