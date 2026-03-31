@@ -15,7 +15,7 @@ func NewDatabase() *Database {
 }
 
 func (db *Database) AddServerSubscription(sub ServerSubscription) int {
-	id := sub.StreamId
+	id := sub.Stream_id
 	name := sub.Name
 	return db.ChannelTable.Put(IdName{
 		Id:   id,

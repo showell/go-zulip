@@ -30,12 +30,12 @@ func TestTopic(t *testing.T) {
 func addTestSubs(t *testing.T, db *database.Database) {
 	subs := []ServerSubscription{
 		{
-			StreamId: 101,
-			Name:     "engineering",
+			Stream_id: 101,
+			Name:      "engineering",
 		},
 		{
-			StreamId: 102,
-			Name:     "design",
+			Stream_id: 102,
+			Name:      "design",
 		},
 	}
 
