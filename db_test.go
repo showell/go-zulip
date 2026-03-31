@@ -1,12 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
+
 import "go-zulip/database"
 import "go-zulip/server_types"
 
 type ServerSubscription = server_types.ServerSubscription
 
-func main() {
+func TestGeneral(t *testing.T) {
 	subs := []ServerSubscription{
 		{
 			StreamId: 101,
@@ -20,13 +24,13 @@ func main() {
 
 	db := database.NewDatabase()
 
-	for _, sub := range subs {
+	for i, sub := range subs {
 		db.AddServerSubscription(sub)
 		// test idempotency
 		index := db.AddServerSubscription(sub)
-		fmt.Println(index)
+		assert.Equal(t, index, i)
 	}
 
-	fmt.Println(db.GetChannelName(101))
-	fmt.Println(db.GetChannelName(102))
+	assert.Equal(t, db.GetChannelName(101), "engineering")
+	assert.Equal(t, db.GetChannelName(102), "design")
 }
