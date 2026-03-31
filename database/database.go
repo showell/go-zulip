@@ -1,9 +1,8 @@
 package database
 
-type Channel struct {
-    Id int
-    Name string
-}
+import "zulip-go/server_types"
+
+type ServerSubscription = server_types.ServerSubscription
 
 type Database struct {
     channel_map map[int]string
@@ -15,11 +14,13 @@ func NewDatabase() *Database {
     }
 }
 
-func (db *Database) AddChannel(channel Channel) {
-    db.channel_map[channel.Id] = channel.Name
+func (db *Database) AddServerSubscription(sub ServerSubscription) {
+    channel_id := sub.StreamId
+    name := sub.Name
+    db.channel_map[channel_id] = name
 }
 
-func (db Database) GetChannelName(id int) string {
-    return db.channel_map[id]
+func (db Database) GetChannelName(channel_id int) string {
+    return db.channel_map[channel_id]
 }
 
