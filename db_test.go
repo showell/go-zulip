@@ -26,7 +26,7 @@ func TestTopic(t *testing.T) {
 	assert.Equal(t, table.NameFromIndex(1), "banana")
 }
 
-func TestGeneral(t *testing.T) {
+func addTestSubs(t *testing.T, db *database.Database) {
 	subs := []ServerSubscription{
 		{
 			StreamId: 101,
@@ -38,7 +38,6 @@ func TestGeneral(t *testing.T) {
 		},
 	}
 
-	db := database.NewDatabase()
 
 	for i, sub := range subs {
 		db.AddServerSubscription(sub)
@@ -46,6 +45,13 @@ func TestGeneral(t *testing.T) {
 		index := db.AddServerSubscription(sub)
 		assert.Equal(t, index, i)
 	}
+
+}
+
+func TestGeneral(t *testing.T) {
+	db := database.NewDatabase()
+
+    addTestSubs(t, db)
 
 	assert.Equal(t, db.ChannelTable.GetName(101), "engineering")
 	assert.Equal(t, db.ChannelTable.GetName(102), "design")
