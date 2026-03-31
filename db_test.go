@@ -51,7 +51,7 @@ func addTestSubs(t *testing.T, db *database.Database) {
 func test_messages() []ServerMessage {
 	return []ServerMessage{
 		{
-			Content:          "message1",
+			Content:          "message0",
 			Id:               201,
 			Sender_full_name: "Foo Barson",
 			Sender_id:        1001,
@@ -60,7 +60,7 @@ func test_messages() []ServerMessage {
 		},
 
 		{
-			Content:          "message2",
+			Content:          "message1",
 			Id:               202,
 			Sender_full_name: "Foo Barson",
 			Sender_id:        1001,
@@ -69,7 +69,7 @@ func test_messages() []ServerMessage {
 		},
 
 		{
-			Content:          "message3",
+			Content:          "message2",
 			Id:               203,
 			Sender_full_name: "Fred Flintstone",
 			Sender_id:        1002,
@@ -78,7 +78,7 @@ func test_messages() []ServerMessage {
 		},
 
 		{
-			Content:          "message4",
+			Content:          "message3",
 			Id:               204,
 			Sender_full_name: "Fred Flintstone",
 			Sender_id:        1002,
