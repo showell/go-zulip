@@ -13,6 +13,19 @@ import (
 type ServerMessage = server_types.ServerMessage
 type ServerSubscription = server_types.ServerSubscription
 
+func TestOneToMany(t *testing.T) {
+	one_to_many := database.NewOneToMany()
+
+	one_to_many.Update(0, 5)
+	one_to_many.Update(3, 30)
+	one_to_many.Update(2, 22)
+
+	assert.Equal(t, one_to_many.GetManyIndexesInRandomOrder(0), []int{5})
+	assert.Equal(t, one_to_many.GetManyIndexesInRandomOrder(1), []int{})
+	assert.Equal(t, one_to_many.GetManyIndexesInRandomOrder(2), []int{22})
+	assert.Equal(t, one_to_many.GetManyIndexesInRandomOrder(3), []int{30})
+}
+
 func TestTopic(t *testing.T) {
 	table := database.NewTopicTable()
 
