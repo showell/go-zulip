@@ -14,6 +14,29 @@ import (
 type ServerMessage = server_types.ServerMessage
 type ServerSubscription = server_types.ServerSubscription
 
+func TestMessage(t *testing.T) {
+	message_table := database.NewMessageTable()
+
+	message_table.Put(database.Message{
+		Id:           1001,
+		SenderIndex:  200,
+		AddressIndex: 300,
+		Content:      "message 1001",
+	})
+
+	assert.Equal(
+		t,
+		*message_table.RowFromId(1001),
+		database.MessageRow{
+			Index:        0,
+			Id:           1001,
+			SenderIndex:  200,
+			AddressIndex: 300,
+			Content:      "message 1001",
+		},
+	)
+}
+
 func TestOneToMany(t *testing.T) {
 	one_to_many := database.NewOneToMany()
 
