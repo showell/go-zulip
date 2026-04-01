@@ -33,6 +33,8 @@ func TestOneToMany(t *testing.T) {
 	assert.Equal(t, get(1), []int{})
 	assert.Equal(t, get(2), []int{22})
 	assert.Equal(t, get(3), []int{30})
+
+	assert.Equal(t, one_to_many.Count(0), 3)
 }
 
 func TestTopic(t *testing.T) {
