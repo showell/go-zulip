@@ -1,4 +1,4 @@
-package topic
+package database
 
 import "strings"
 

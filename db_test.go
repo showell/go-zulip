@@ -8,14 +8,13 @@ import (
 import (
 	"go-zulip/database"
 	"go-zulip/server_types"
-	"go-zulip/topic"
 )
 
 type ServerMessage = server_types.ServerMessage
 type ServerSubscription = server_types.ServerSubscription
 
 func TestTopic(t *testing.T) {
-	table := topic.NewTopicTable()
+	table := database.NewTopicTable()
 
 	table.Put("apple")
 	table.Put("apple")
