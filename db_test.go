@@ -88,9 +88,18 @@ func test_messages() []ServerMessage {
 	}
 }
 
+func addTestMessages(db *database.Database, messages []ServerMessage) {
+	for _, message := range messages {
+		db.AddServerMessage(message)
+	}
+}
+
 func TestMessages(t *testing.T) {
+	db := database.NewDatabase()
 	messages := test_messages()
+	addTestMessages(db, messages)
 	assert.Equal(t, messages[0].Content, "message0")
+	assert.Equal(t, db.UserTable.GetName(1002), "Fred Flintstone")
 }
 
 func TestChannels(t *testing.T) {
