@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/stretchr/testify/assert"
+	"slices"
 	"testing"
 )
 
@@ -19,11 +20,19 @@ func TestOneToMany(t *testing.T) {
 	one_to_many.Update(0, 5)
 	one_to_many.Update(3, 30)
 	one_to_many.Update(2, 22)
+	one_to_many.Update(0, 7)
+	one_to_many.Update(0, 3)
 
-	assert.Equal(t, one_to_many.GetManyIndexesInRandomOrder(0), []int{5})
-	assert.Equal(t, one_to_many.GetManyIndexesInRandomOrder(1), []int{})
-	assert.Equal(t, one_to_many.GetManyIndexesInRandomOrder(2), []int{22})
-	assert.Equal(t, one_to_many.GetManyIndexesInRandomOrder(3), []int{30})
+	get := func(one_index int) []int {
+		lst := one_to_many.GetManyIndexesInRandomOrder(one_index)
+		slices.Sort(lst)
+		return lst
+	}
+
+	assert.Equal(t, get(0), []int{3, 5, 7})
+	assert.Equal(t, get(1), []int{})
+	assert.Equal(t, get(2), []int{22})
+	assert.Equal(t, get(3), []int{30})
 }
 
 func TestTopic(t *testing.T) {
