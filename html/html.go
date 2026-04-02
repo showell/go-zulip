@@ -3,6 +3,8 @@ package html
 import h "html"
 
 import (
+	"cmp"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -17,6 +19,18 @@ func ChannelsHtml(db *Database) string {
 	var sb strings.Builder
 	rows := db.ChannelTable.Rows
 
+	indexes := make([]int, len(rows))
+	for i := range len(rows) {
+		indexes[i] = i
+	}
+
+	slices.SortFunc(indexes, func(a, b int) int {
+		return cmp.Compare(
+			rows[a].Name,
+			rows[b].Name,
+		)
+	})
+
 	p := sb.WriteString
 	Itoa := strconv.Itoa
 
@@ -24,7 +38,8 @@ func ChannelsHtml(db *Database) string {
 	p(Itoa(len(rows)))
 	p(" channels</h4>\n")
 
-	for _, row := range rows {
+	for _, index := range indexes {
+		row := rows[index]
 		name := h.EscapeString(row.Name)
 		channel_id := Itoa(row.Id)
 		num_topics := Itoa(db.ChannelToAddress.Count(row.Index))

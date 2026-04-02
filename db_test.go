@@ -252,13 +252,13 @@ func build_big_db() *database.Database {
 func TestPerf(t *testing.T) {
 	db := build_big_db()
 	fmt.Println("Test channels html")
-	for i := range 10_000_001 {
+	for i := range 50_000_001 {
 		s := html.ChannelsHtml(db)
-		if i%100_000 == 0 {
+		if i%1_000_000 == 0 {
 			fmt.Println(i)
 		}
 
-		if i%1_000_000 == 0 {
+		if i%10_000_000 == 0 {
 			fmt.Println(s)
 		}
 	}
