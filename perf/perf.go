@@ -28,7 +28,7 @@ func build_big_db() *database.Database {
 
 	message_id := 0
 
-	for i := range 5 {
+	for range 25_000 {
 		for n := range nums {
 			channel_id := 100 + n
 
@@ -52,14 +52,15 @@ func build_big_db() *database.Database {
 			}
 		}
 
-		fmt.Printf("%d loops\n", i)
-		fmt.Printf("message_id %d\n", message_id)
+		if (message_id)%100_000 == 0 {
+			fmt.Printf("message_id %d\n", message_id)
+		}
 	}
 
 	return db
 }
 
-func main() {
+func channels() {
 	db := build_big_db()
 	fmt.Println("Test channels html")
 	for i := range 50_000_001 {
@@ -72,4 +73,28 @@ func main() {
 			fmt.Println(s)
 		}
 	}
+}
+
+func topics() {
+	db := build_big_db()
+	fmt.Println("Test topics html")
+	cnt := 0
+	for range 2_500_000 {
+		for channel_index := range 20 {
+			s := html.TopicsHtml(db, channel_index)
+			cnt += 1
+
+			if cnt%100_000 == 0 {
+				fmt.Println(cnt)
+			}
+
+			if cnt%1_000_000 == 0 {
+				fmt.Println(s)
+			}
+		}
+	}
+}
+
+func main() {
+	topics()
 }
