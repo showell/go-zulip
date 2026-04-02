@@ -1,5 +1,7 @@
 package database
 
+import "strings"
+
 type IdName struct {
 	Id   int
 	Name string
@@ -37,7 +39,7 @@ func (table *IdNameTable) Put(id_name IdName) int {
 	row := IdNameRow{
 		Index: new_index,
 		Id:    id,
-		Name:  name,
+		Name:  strings.Clone(name),
 	}
 
 	table.rows = append(table.rows, row)
@@ -53,6 +55,15 @@ func (table IdNameTable) RowFromId(id int) *IdNameRow {
 	}
 
 	return &table.rows[index]
+}
+
+func (table IdNameTable) GetOrMakeIndex(id int) int {
+	index, ok := table.id_to_index[id]
+	if ok {
+		return index
+	}
+
+	return table.Put(IdName{Id: id, Name: "unknown"})
 }
 
 func (table IdNameTable) GetName(id int) string {

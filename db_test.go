@@ -18,7 +18,7 @@ func TestMessage(t *testing.T) {
 	message_table := database.NewMessageTable()
 
 	message_table.Put(database.Message{
-		Id:           1001,
+		MessageId:    1001,
 		SenderIndex:  200,
 		AddressIndex: 300,
 		Content:      "message 1001",
@@ -28,7 +28,7 @@ func TestMessage(t *testing.T) {
 		t,
 		database.MessageRow{
 			Index:        0,
-			Id:           1001,
+			MessageId:    1001,
 			SenderIndex:  200,
 			AddressIndex: 300,
 			Content:      "message 1001",

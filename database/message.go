@@ -1,7 +1,7 @@
 package database
 
 type Message struct {
-	Id           int
+	MessageId    int
 	SenderIndex  int
 	AddressIndex int
 	Content      string
@@ -9,7 +9,7 @@ type Message struct {
 
 type MessageRow struct {
 	Index        int
-	Id           int
+	MessageId    int
 	SenderIndex  int
 	AddressIndex int
 	Content      string
@@ -28,7 +28,7 @@ func NewMessageTable() *MessageTable {
 }
 
 func (table *MessageTable) Put(message Message) int {
-	id := message.Id
+	id := message.MessageId
 
 	index, ok := table.id_to_index[id]
 	if ok {
@@ -41,7 +41,7 @@ func (table *MessageTable) Put(message Message) int {
 
 	row := MessageRow{
 		Index:        new_index,
-		Id:           message.Id,
+		MessageId:    message.MessageId,
 		Content:      message.Content,
 		AddressIndex: message.AddressIndex,
 		SenderIndex:  message.SenderIndex,
