@@ -26,7 +26,6 @@ func TestMessage(t *testing.T) {
 
 	assert.Equal(
 		t,
-		*message_table.RowFromId(1001),
 		database.MessageRow{
 			Index:        0,
 			Id:           1001,
@@ -34,6 +33,7 @@ func TestMessage(t *testing.T) {
 			AddressIndex: 300,
 			Content:      "message 1001",
 		},
+		*message_table.RowFromId(1001),
 	)
 }
 
@@ -52,12 +52,12 @@ func TestOneToMany(t *testing.T) {
 		return lst
 	}
 
-	assert.Equal(t, get(0), []int{3, 5, 7})
-	assert.Equal(t, get(1), []int{})
-	assert.Equal(t, get(2), []int{22})
-	assert.Equal(t, get(3), []int{30})
+	assert.Equal(t, []int{3, 5, 7}, get(0))
+	assert.Equal(t, []int{}, get(1))
+	assert.Equal(t, []int{22}, get(2))
+	assert.Equal(t, []int{30}, get(3))
 
-	assert.Equal(t, one_to_many.Count(0), 3)
+	assert.Equal(t, 3, one_to_many.Count(0))
 }
 
 func TestAddress(t *testing.T) {
