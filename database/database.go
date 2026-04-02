@@ -6,14 +6,26 @@ type ServerMessage = server_types.ServerMessage
 type ServerSubscription = server_types.ServerSubscription
 
 type Database struct {
+	AddressTable *AddressTable
 	ChannelTable *IdNameTable
+	TopicTable   *TopicTable
 	UserTable    *IdNameTable
+
+	// OneToMany objects are for speed
+	AddressToMessage *OneToMany
+	ChannelToAddress *OneToMany
 }
 
 func NewDatabase() *Database {
 	return &Database{
+		AddressTable: NewAddressTable(),
 		ChannelTable: NewIdNameTable(),
+		TopicTable:   NewTopicTable(),
 		UserTable:    NewIdNameTable(),
+
+		// OneToMany objects are for speed
+		AddressToMessage: NewOneToMany(),
+		ChannelToAddress: NewOneToMany(),
 	}
 }
 
