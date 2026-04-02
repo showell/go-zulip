@@ -88,7 +88,7 @@ func topics() {
 				fmt.Println(cnt)
 			}
 
-			if cnt%1_000_000 == 0 {
+			if cnt%999_999 == 0 {
 				fmt.Println(s)
 			}
 		}

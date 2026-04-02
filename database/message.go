@@ -17,13 +17,13 @@ type MessageRow struct {
 
 type MessageTable struct {
 	id_to_index map[int]int
-	rows        []MessageRow
+	Rows        []MessageRow
 }
 
 func NewMessageTable() *MessageTable {
 	return &MessageTable{
 		id_to_index: make(map[int]int),
-		rows:        make([]MessageRow, 0),
+		Rows:        make([]MessageRow, 0),
 	}
 }
 
@@ -37,7 +37,7 @@ func (table *MessageTable) Put(message Message) int {
 		return index
 	}
 
-	new_index := len(table.rows)
+	new_index := len(table.Rows)
 
 	row := MessageRow{
 		Index:        new_index,
@@ -47,7 +47,7 @@ func (table *MessageTable) Put(message Message) int {
 		SenderIndex:  message.SenderIndex,
 	}
 
-	table.rows = append(table.rows, row)
+	table.Rows = append(table.Rows, row)
 	table.id_to_index[id] = new_index
 
 	return new_index
@@ -59,5 +59,5 @@ func (table MessageTable) RowFromId(id int) *MessageRow {
 		return nil
 	}
 
-	return &table.rows[index]
+	return &table.Rows[index]
 }
