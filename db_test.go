@@ -77,6 +77,16 @@ func TestAddress(t *testing.T) {
 		&Row{ChannelIndex: 0, TopicIndex: 0},
 		table.RowFromIndex(0),
 	)
+	assert.Equal(
+		t,
+		&Row{ChannelIndex: 0, TopicIndex: 1},
+		table.RowFromIndex(1),
+	)
+	assert.Equal(
+		t,
+		&Row{ChannelIndex: 4, TopicIndex: 1},
+		table.RowFromIndex(2),
+	)
 }
 
 func TestTopic(t *testing.T) {
