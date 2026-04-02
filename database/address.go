@@ -7,13 +7,13 @@ type AddressRow struct {
 
 type AddressTable struct {
 	row_to_index map[AddressRow]int
-	rows         []AddressRow
+	Rows         []AddressRow
 }
 
 func NewAddressTable() *AddressTable {
 	return &AddressTable{
 		row_to_index: make(map[AddressRow]int),
-		rows:         make([]AddressRow, 0),
+		Rows:         make([]AddressRow, 0),
 	}
 }
 
@@ -23,14 +23,10 @@ func (table *AddressTable) Put(row AddressRow) int {
 		return index
 	}
 
-	new_index := len(table.rows)
+	new_index := len(table.Rows)
 
-	table.rows = append(table.rows, row)
+	table.Rows = append(table.Rows, row)
 	table.row_to_index[row] = new_index
 
 	return new_index
-}
-
-func (table AddressTable) RowFromIndex(index int) *AddressRow {
-	return &table.rows[index]
 }

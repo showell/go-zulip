@@ -29,6 +29,10 @@ func (self *OneToMany) Update(one_index int, many_index int) {
 }
 
 func (self OneToMany) GetManyIndexesInRandomOrder(one_index int) []int {
+	if one_index >= len(self.list_of_sets) {
+		return []int{}
+	}
+
 	int_set := self.list_of_sets[one_index]
 
 	if len(int_set) == 0 {

@@ -76,18 +76,18 @@ func TestAddress(t *testing.T) {
 
 	assert.Equal(
 		t,
-		&Row{ChannelIndex: 0, TopicIndex: 0},
-		table.RowFromIndex(0),
+		Row{ChannelIndex: 0, TopicIndex: 0},
+		table.Rows[0],
 	)
 	assert.Equal(
 		t,
-		&Row{ChannelIndex: 0, TopicIndex: 1},
-		table.RowFromIndex(1),
+		Row{ChannelIndex: 0, TopicIndex: 1},
+		table.Rows[1],
 	)
 	assert.Equal(
 		t,
-		&Row{ChannelIndex: 4, TopicIndex: 1},
-		table.RowFromIndex(2),
+		Row{ChannelIndex: 4, TopicIndex: 1},
+		table.Rows[2],
 	)
 }
 
@@ -100,8 +100,8 @@ func TestTopic(t *testing.T) {
 	table.Put("banana")
 	table.Put("banana")
 
-	assert.Equal(t, "apple", table.NameFromIndex(0))
-	assert.Equal(t, "banana", table.NameFromIndex(1))
+	assert.Equal(t, "apple", table.Rows[0])
+	assert.Equal(t, "banana", table.Rows[1])
 }
 
 func addTestSubs(t *testing.T, db *database.Database) {
@@ -177,6 +177,18 @@ func TestChannelsHtml(t *testing.T) {
 	addTestMessages(db, test_messages())
 
 	fmt.Println(html.ChannelsHtml(db))
+}
+
+func TestTopicsHtml(t *testing.T) {
+	db := database.NewDatabase()
+	addTestSubs(t, db)
+	addTestMessages(db, test_messages())
+
+	fmt.Println(db.AddressTable.Rows)
+
+	for i := range len(db.AddressTable.Rows) {
+		fmt.Println(html.TopicsHtml(db, i))
+	}
 }
 
 func TestMessages(t *testing.T) {
