@@ -98,8 +98,8 @@ func TestTopic(t *testing.T) {
 	table.Put("banana")
 	table.Put("banana")
 
-	assert.Equal(t, table.NameFromIndex(0), "apple")
-	assert.Equal(t, table.NameFromIndex(1), "banana")
+	assert.Equal(t, "apple", table.NameFromIndex(0))
+	assert.Equal(t, "banana", table.NameFromIndex(1))
 }
 
 func addTestSubs(t *testing.T, db *database.Database) {
@@ -118,7 +118,7 @@ func addTestSubs(t *testing.T, db *database.Database) {
 		db.AddServerSubscription(sub)
 		// test idempotency
 		index := db.AddServerSubscription(sub)
-		assert.Equal(t, index, i)
+		assert.Equal(t, i, index)
 	}
 
 }
@@ -173,8 +173,12 @@ func TestMessages(t *testing.T) {
 	db := database.NewDatabase()
 	messages := test_messages()
 	addTestMessages(db, messages)
-	assert.Equal(t, messages[0].Content, "message0")
-	assert.Equal(t, db.UserTable.GetName(1002), "Fred Flintstone")
+	assert.Equal(t, "message0", messages[0].Content)
+	assert.Equal(
+		t,
+		"Fred Flintstone",
+		db.UserTable.GetName(1002),
+	)
 }
 
 func TestChannels(t *testing.T) {
@@ -182,6 +186,6 @@ func TestChannels(t *testing.T) {
 
 	addTestSubs(t, db)
 
-	assert.Equal(t, db.ChannelTable.GetName(101), "engineering")
-	assert.Equal(t, db.ChannelTable.GetName(102), "design")
+	assert.Equal(t, "engineering", db.ChannelTable.GetName(101))
+	assert.Equal(t, "design", db.ChannelTable.GetName(102))
 }
