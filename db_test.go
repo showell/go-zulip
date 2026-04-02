@@ -112,7 +112,7 @@ func addTestSubs(t *testing.T, db *database.Database) {
 		},
 		{
 			Stream_id: 102,
-			Name:      "design",
+			Name:      "design & frontend",
 		},
 	}
 
@@ -197,5 +197,5 @@ func TestChannels(t *testing.T) {
 	addTestSubs(t, db)
 
 	assert.Equal(t, "engineering", db.ChannelTable.GetName(101))
-	assert.Equal(t, "design", db.ChannelTable.GetName(102))
+	assert.Equal(t, "design & frontend", db.ChannelTable.GetName(102))
 }

@@ -1,5 +1,7 @@
 package html
 
+import h "html"
+
 import (
 	"strconv"
 	"strings"
@@ -18,7 +20,7 @@ func ChannelsHtml(db *Database) string {
 
 	for _, row := range db.ChannelTable.Rows {
 		p(strconv.Itoa(row.Id))
-		p(row.Name)
+		p(h.EscapeString(row.Name))
 		p("\n")
 	}
 
