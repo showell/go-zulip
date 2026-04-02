@@ -29,10 +29,10 @@ func build_big_db() *database.Database {
 	message_id := 0
 
 	for range 25_000 {
-		for n := range nums {
+		for _, n := range nums {
 			channel_id := 100 + n
 
-			for topic_n := range nums {
+			for _, topic_n := range nums {
 				subject := fmt.Sprintf("topic-%d", 1000+topic_n)
 
 				message_id += 1
