@@ -60,6 +60,25 @@ func TestOneToMany(t *testing.T) {
 	assert.Equal(t, one_to_many.Count(0), 3)
 }
 
+func TestAddress(t *testing.T) {
+	table := database.NewAddressTable()
+
+	type Row = database.AddressRow
+
+	table.Put(Row{ChannelIndex: 0, TopicIndex: 0})
+	table.Put(Row{ChannelIndex: 0, TopicIndex: 0})
+	table.Put(Row{ChannelIndex: 0, TopicIndex: 0})
+	table.Put(Row{ChannelIndex: 0, TopicIndex: 1})
+	table.Put(Row{ChannelIndex: 0, TopicIndex: 1})
+	table.Put(Row{ChannelIndex: 4, TopicIndex: 1})
+
+	assert.Equal(
+		t,
+		&Row{ChannelIndex: 0, TopicIndex: 0},
+		table.RowFromIndex(0),
+	)
+}
+
 func TestTopic(t *testing.T) {
 	table := database.NewTopicTable()
 
