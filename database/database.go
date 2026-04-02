@@ -70,5 +70,9 @@ func (db *Database) AddServerMessage(server_message ServerMessage) {
 		SenderIndex:  sender_index,
 	}
 
-	db.MessageTable.Put(message)
+	message_index := db.MessageTable.Put(message)
+
+	// OneToMany
+	db.AddressToMessage.Update(address_index, message_index)
+	db.ChannelToAddress.Update(channel_index, address_index)
 }
