@@ -39,5 +39,8 @@ func (self OneToMany) GetManyIndexesInRandomOrder(one_index int) []int {
 }
 
 func (self OneToMany) Count(one_index int) int {
+	if one_index >= len(self.list_of_sets) {
+		return 0
+	}
 	return len(self.list_of_sets[one_index])
 }
