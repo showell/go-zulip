@@ -14,9 +14,12 @@ type Database = database.Database
 func ChannelsHtml(db *Database) string {
 	var sb strings.Builder
 
+	p := sb.WriteString
+
 	for _, row := range db.ChannelTable.Rows {
-		sb.WriteString(strconv.Itoa(row.Id))
-		sb.WriteString("\n")
+		p(strconv.Itoa(row.Id))
+		p(row.Name)
+		p("\n")
 	}
 
 	return sb.String()
