@@ -44,35 +44,37 @@ func (db *Database) AddServerSubscription(sub ServerSubscription) int {
 }
 
 func (db *Database) AddServerMessage(server_message ServerMessage) {
+	channel_id := server_message.Stream_id
 	content := server_message.Content
 	message_id := server_message.Id
-	channel_id := server_message.Stream_id
+	sender_id := server_message.Sender_id
+	sender_name := server_message.Sender_full_name
 	topic_name := server_message.Subject
 
+	// Sender
 	sender_index := db.UserTable.Put(IdName{
-		Id:   server_message.Sender_id,
-		Name: server_message.Sender_full_name,
+		Id:   sender_id,
+		Name: sender_name,
 	})
 
+	// Address
 	channel_index := db.ChannelTable.GetOrMakeIndex(channel_id)
-
 	topic_index := db.TopicTable.Put(topic_name)
-
 	address_index := db.AddressTable.Put(AddressRow{
 		ChannelIndex: channel_index,
 		TopicIndex:   topic_index,
 	})
 
+	// Message
 	message := Message{
 		AddressIndex: address_index,
 		Content:      strings.Clone(content),
 		MessageId:    message_id,
 		SenderIndex:  sender_index,
 	}
-
 	message_index := db.MessageTable.Put(message)
 
-	// OneToMany
+	// OneToMany optimizations
 	db.AddressToMessage.Update(address_index, message_index)
 	db.ChannelToAddress.Update(channel_index, address_index)
 }
