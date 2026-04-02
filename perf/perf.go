@@ -75,26 +75,45 @@ func channels() {
 	}
 }
 
-func topics() {
+func topics_and_messages() {
+	type AddressRow = database.AddressRow
+
 	db := build_big_db()
 	fmt.Println("Test topics html")
 	cnt := 0
-	for range 2_500_000 {
-		for channel_index := range 20 {
-			s := html.TopicsHtml(db, channel_index)
-			cnt += 1
 
-			if cnt%100_000 == 0 {
-				fmt.Println(cnt)
-			}
+	for range 100 {
+		for i := range 20 {
+			channel_id := 100 + i
+			channel_index := db.ChannelTable.GetOrMakeIndex(channel_id)
+			// topics_html := html.TopicsHtml(db, channel_index)
 
-			if cnt%999_999 == 0 {
-				fmt.Println(s)
+			for j := range 20 {
+				subject := fmt.Sprintf("topic-%d", 1000+j)
+				topic_index := db.TopicTable.Put(subject)
+
+				address_row := AddressRow{
+					ChannelIndex: channel_index,
+					TopicIndex:   topic_index,
+				}
+				address_index := db.AddressTable.Put(address_row)
+
+				messages_html := html.MessagesHtml(db, address_index)
+
+				cnt += 1
+
+				if cnt%100 == 0 {
+					fmt.Println(cnt)
+				}
+
+				if cnt%999 == 0 {
+					fmt.Println(messages_html)
+				}
 			}
 		}
 	}
 }
 
 func main() {
-	topics()
+	topics_and_messages()
 }

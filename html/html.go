@@ -126,6 +126,7 @@ func MessagesHtml(db *Database, address_index int) string {
 	message_count := len(message_indexes)
 
 	type MessageRow struct {
+		message_id  int
 		sender_name string
 		content     string
 	}
@@ -134,17 +135,19 @@ func MessagesHtml(db *Database, address_index int) string {
 
 	for i, message_index := range message_indexes {
 		message := db.MessageTable.Rows[message_index]
+		message_id := message.MessageId
 		sender_name := db.UserTable.Rows[message.SenderIndex].Name
 		content := message.Content
 
 		rows[i] = MessageRow{
+			message_id:  message_id,
 			sender_name: sender_name,
 			content:     content,
 		}
 	}
 
 	slices.SortFunc(rows, func(a, b MessageRow) int {
-		return cmp.Compare(a.sender_name, b.sender_name)
+		return cmp.Compare(a.message_id, b.message_id)
 	})
 
 	p := sb.WriteString
@@ -157,7 +160,8 @@ func MessagesHtml(db *Database, address_index int) string {
 	p("</h4>\n")
 
 	for _, row := range rows {
-		sender_name := h.EscapeString(row.sender_name)
+		// sender_name := h.EscapeString(row.sender_name)
+		sender_name := row.sender_name
 		content := row.content // already valid HTML from server
 
 		p("<div class='message_sender'>")
@@ -167,6 +171,13 @@ func MessagesHtml(db *Database, address_index int) string {
 		p(content)
 		p("</div>\n")
 	}
+
+	p("<h3>")
+	p("THE END: ")
+	p(Itoa(message_count))
+	p(" messages for ")
+	p(h.EscapeString(topic_name))
+	p("</h3>\n")
 
 	return sb.String()
 }
