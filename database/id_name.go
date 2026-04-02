@@ -15,13 +15,13 @@ type IdNameRow struct {
 
 type IdNameTable struct {
 	id_to_index map[int]int
-	rows        []IdNameRow
+	Rows        []IdNameRow
 }
 
 func NewIdNameTable() *IdNameTable {
 	return &IdNameTable{
 		id_to_index: make(map[int]int),
-		rows:        make([]IdNameRow, 0),
+		Rows:        make([]IdNameRow, 0),
 	}
 }
 
@@ -34,7 +34,7 @@ func (table *IdNameTable) Put(id_name IdName) int {
 		return index
 	}
 
-	new_index := len(table.rows)
+	new_index := len(table.Rows)
 
 	row := IdNameRow{
 		Index: new_index,
@@ -42,7 +42,7 @@ func (table *IdNameTable) Put(id_name IdName) int {
 		Name:  strings.Clone(name),
 	}
 
-	table.rows = append(table.rows, row)
+	table.Rows = append(table.Rows, row)
 	table.id_to_index[id] = new_index
 
 	return new_index
@@ -54,7 +54,7 @@ func (table IdNameTable) RowFromId(id int) *IdNameRow {
 		return nil
 	}
 
-	return &table.rows[index]
+	return &table.Rows[index]
 }
 
 func (table IdNameTable) GetOrMakeIndex(id int) int {
