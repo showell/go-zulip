@@ -1,5 +1,10 @@
 package database
 
+import (
+	"maps"
+	"slices"
+)
+
 type IntSet = map[int]struct{}
 
 type OneToMany struct {
@@ -26,13 +31,11 @@ func (self *OneToMany) Update(one_index int, many_index int) {
 func (self OneToMany) GetManyIndexesInRandomOrder(one_index int) []int {
 	int_set := self.list_of_sets[one_index]
 
-	lst := make([]int, 0)
-
-	for k := range int_set {
-		lst = append(lst, k)
+	if len(int_set) == 0 {
+		return []int{}
 	}
 
-	return lst
+	return slices.Collect(maps.Keys(int_set))
 }
 
 func (self OneToMany) Count(one_index int) int {
