@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"slices"
 	"testing"
@@ -8,6 +9,7 @@ import (
 
 import (
 	"go-zulip/database"
+	"go-zulip/html"
 	"go-zulip/server_types"
 )
 
@@ -167,6 +169,14 @@ func addTestMessages(db *database.Database, messages []ServerMessage) {
 	for _, message := range messages {
 		db.AddServerMessage(message)
 	}
+}
+
+func TestChannelsHtml(t *testing.T) {
+	db := database.NewDatabase()
+	addTestSubs(t, db)
+	addTestMessages(db, test_messages())
+
+	fmt.Println(html.ChannelsHtml(db))
 }
 
 func TestMessages(t *testing.T) {
