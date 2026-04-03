@@ -41,7 +41,7 @@ func TestPath(t *testing.T) {
 		path := "/topics/42"
 
 		address := TopicsAddress{
-			channel_index: 42,
+			ChannelId: 42,
 		}
 		var sb strings.Builder
 		address.WritePath(&sb)

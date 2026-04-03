@@ -1,5 +1,6 @@
 package html
 
+import addr "go-zulip/address"
 import h "html"
 
 import (
@@ -42,14 +43,16 @@ func ChannelsHtml(db *Database, writer io.StringWriter) {
 	for _, index := range indexes {
 		row := rows[index]
 		name := h.EscapeString(row.Name)
-		channel_id := Itoa(row.Id)
+		channel_id := row.Id
 		num_topics := Itoa(db.ChannelToAddress.Count(row.Index))
+
+		topics_address := addr.TopicsAddress{ChannelId: channel_id}
 
 		w("<div class='channel_row'>\n<div class='channel_name'>")
 		w(name)
-		w("</div>\n<div><a href='/topics/")
-		w(channel_id)
-		w(">topic</a></div>\n<div class='channel_count'>")
+		w("</div>\n<div><a href='")
+		topics_address.WritePath(writer)
+		w("'>topics</a></div>\n<div class='channel_count'>")
 		w(num_topics)
 		w(" topics</div>\n</div>\n")
 		w("\n")

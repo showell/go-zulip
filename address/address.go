@@ -17,7 +17,7 @@ type ChannelsAddress struct {
 }
 
 type TopicsAddress struct {
-	channel_index int
+	ChannelId int
 }
 
 type MessagesAddress struct {
@@ -34,7 +34,7 @@ func (self ChannelsAddress) WritePath(w io.StringWriter) {
 
 func (self TopicsAddress) WritePath(w io.StringWriter) {
 	w.WriteString("/topics/")
-	w.WriteString(strconv.Itoa(self.channel_index))
+	w.WriteString(strconv.Itoa(self.ChannelId))
 }
 
 func (self MessagesAddress) WritePath(w io.StringWriter) {
@@ -52,11 +52,11 @@ func GetAddress(path string) Address {
 	if path == "/channels" {
 		return ChannelsAddress{}
 	} else if matches := topic_matches(path); matches != nil {
-		channel_index, err := strconv.Atoi(matches[1])
+		channel_id, err := strconv.Atoi(matches[1])
 		if err != nil {
 			return NadaAddress{}
 		}
-		return TopicsAddress{channel_index: channel_index}
+		return TopicsAddress{ChannelId: channel_id}
 	} else if matches := messages_matches(path); matches != nil {
 		address_index, err := strconv.Atoi(matches[1])
 		if err != nil {

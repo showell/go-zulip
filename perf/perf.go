@@ -2,10 +2,14 @@ package main
 
 import (
 	"fmt"
+	"os"
+)
+
+import (
 	"go-zulip/database"
 	"go-zulip/html"
 	"go-zulip/server_types"
-	"strings"
+	// "strings"
 )
 
 type ServerMessage = server_types.ServerMessage
@@ -62,21 +66,32 @@ func build_big_db() *database.Database {
 	return db
 }
 
+type Counter struct {
+	cnt int
+}
+
+func (c *Counter) WriteString(s string) (int, error) {
+	c.cnt += len(s)
+
+	return 0, nil
+}
+
 func channels() {
 	db := build_big_db()
-	fmt.Println("Test channels html")
-	for i := range 1_000_000 {
-		var sb strings.Builder
-		html.ChannelsHtml(db, &sb)
+	counter := Counter{}
 
-		if (i+1)%100_000 == 0 {
+	fmt.Println("Test channels html")
+	for i := range 10_000_000 {
+		html.ChannelsHtml(db, &counter)
+
+		if (i+1)%500_000 == 0 {
 			fmt.Println(i + 1)
 		}
-
-		if i%200_000 == 0 {
-			fmt.Println(sb.String())
-		}
 	}
+	fmt.Println(counter.cnt)
+
+	// sanity check
+	html.ChannelsHtml(db, os.Stdout)
 }
 
 func topics_and_messages() {
