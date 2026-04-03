@@ -33,7 +33,7 @@ func build_big_db() *database.Database {
 
 	message_id := 0
 
-	for range 100 {
+	for range 1000 {
 		for _, n := range nums {
 			channel_id := 100 + n
 
@@ -67,11 +67,11 @@ func build_big_db() *database.Database {
 }
 
 type Counter struct {
-	cnt int
+	cnt int64
 }
 
 func (c *Counter) WriteString(s string) (int, error) {
-	c.cnt += len(s)
+	c.cnt += int64(len(s))
 
 	return 0, nil
 }
@@ -99,11 +99,13 @@ func topics_and_messages() {
 
 	db := build_big_db()
 	fmt.Println("Test topics html")
-	cnt := 0
 	counter := Counter{}
 
-	for loop := range 200_000 {
-		if loop%10_000 == 0 {
+	loop := 0
+	for counter.cnt < 10_000_000_000 {
+		loop += 1
+
+		if loop%20 == 0 {
 			fmt.Println(loop, "(outer loop)")
 		}
 
@@ -113,7 +115,7 @@ func topics_and_messages() {
 
 			html.TopicsHtml(db, channel_id, &counter)
 
-			for j := range 0 {
+			for j := range 20 {
 				subject := fmt.Sprintf("topic-%d", 1000+j)
 				topic_index := db.TopicTable.Put(subject)
 
@@ -123,22 +125,13 @@ func topics_and_messages() {
 				}
 				address_index := db.AddressTable.Put(address_row)
 
-				messages_html := html.MessagesHtml(db, address_index)
-
-				cnt += 1
-
-				if cnt%100 == 0 {
-					fmt.Println(cnt)
-				}
-
-				if cnt%999 == 0 {
-					fmt.Println(messages_html)
-				}
+				html.MessagesHtml(db, address_index, &counter)
 			}
 		}
 	}
 
 	// sanity check
+	html.MessagesHtml(db, 0, os.Stdout)
 	html.TopicsHtml(db, 101, os.Stdout)
 	fmt.Println(counter.cnt, "chars")
 }

@@ -8,7 +8,6 @@ import (
 	"io"
 	"slices"
 	"strconv"
-	"strings"
 )
 
 import (
@@ -117,8 +116,8 @@ func TopicsHtml(db *Database, channel_id int, writer io.StringWriter) {
 	}
 }
 
-func MessagesHtml(db *Database, address_index int) string {
-	var sb strings.Builder
+func MessagesHtml(db *Database, address_index int, writer io.StringWriter) {
+	w := writer.WriteString
 
 	address := db.AddressTable.Rows[address_index]
 	channel_index := address.ChannelIndex
@@ -154,34 +153,31 @@ func MessagesHtml(db *Database, address_index int) string {
 		return cmp.Compare(a.message_id, b.message_id)
 	})
 
-	p := sb.WriteString
 	Itoa := strconv.Itoa
 
-	p("<h4>")
-	p(Itoa(message_count))
-	p(" messages for ")
-	p(h.EscapeString(topic_name))
-	p("</h4>\n")
+	w("<h4>")
+	w(Itoa(message_count))
+	w(" messages for ")
+	w(h.EscapeString(topic_name))
+	w("</h4>\n")
 
 	for _, row := range rows {
 		// sender_name := h.EscapeString(row.sender_name)
 		sender_name := row.sender_name
 		content := row.content // already valid HTML from server
 
-		p("<div class='message_sender'>")
-		p(sender_name)
-		p("</div>\n")
-		p("<div>")
-		p(content)
-		p("</div>\n")
+		w("<div class='message_sender'>")
+		w(sender_name)
+		w("</div>\n")
+		w("<div>")
+		w(content)
+		w("</div>\n")
 	}
 
-	p("<h3>")
-	p("THE END: ")
-	p(Itoa(message_count))
-	p(" messages for ")
-	p(h.EscapeString(topic_name))
-	p("</h3>\n")
-
-	return sb.String()
+	w("<h3>")
+	w("THE END: ")
+	w(Itoa(message_count))
+	w(" messages for ")
+	w(h.EscapeString(topic_name))
+	w("</h3>\n")
 }
