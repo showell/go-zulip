@@ -8,19 +8,55 @@ import (
 
 func TestPath(t *testing.T) {
 	{
-		var address ChannelsAddress
+		path := "/"
+
+		address := NadaAddress{}
 		var sb strings.Builder
 		address.WritePath(&sb)
-		assert.Equal(t, "/channels", sb.String())
+		assert.Equal(t, path, sb.String())
+
+		{
+			address := GetAddress(path)
+			_, ok := address.(NadaAddress)
+			assert.True(t, ok)
+		}
 	}
 
 	{
+		path := "/channels"
+
+		var address ChannelsAddress
+		var sb strings.Builder
+		address.WritePath(&sb)
+		assert.Equal(t, path, sb.String())
+
+		{
+			address := GetAddress(path)
+			_, ok := address.(ChannelsAddress)
+			assert.True(t, ok)
+		}
+	}
+
+	{
+		path := "/topics/42"
+
 		address := TopicsAddress{
 			channel_index: 42,
 		}
 		var sb strings.Builder
 		address.WritePath(&sb)
-		assert.Equal(t, "/topics/42", sb.String())
+		assert.Equal(t, path, sb.String())
+
+		{
+			address := GetAddress(path)
+			topics_address, ok := address.(TopicsAddress)
+			assert.True(t, ok)
+			assert.Equal(
+				t,
+				topics_address,
+				TopicsAddress{channel_index: 42},
+			)
+		}
 	}
 
 	{
