@@ -5,6 +5,7 @@ import (
 	"go-zulip/database"
 	"go-zulip/html"
 	"go-zulip/server_types"
+	"strings"
 )
 
 type ServerMessage = server_types.ServerMessage
@@ -28,7 +29,7 @@ func build_big_db() *database.Database {
 
 	message_id := 0
 
-	for range 25_000 {
+	for range 100 {
 		for _, n := range nums {
 			channel_id := 100 + n
 
@@ -36,6 +37,10 @@ func build_big_db() *database.Database {
 				subject := fmt.Sprintf("topic-%d", 1000+topic_n)
 
 				message_id += 1
+
+				if (message_id)%1_000 == 0 {
+					fmt.Printf("message_id %d\n", message_id)
+				}
 
 				content := fmt.Sprintf("content for %d", message_id)
 
@@ -52,9 +57,6 @@ func build_big_db() *database.Database {
 			}
 		}
 
-		if (message_id)%100_000 == 0 {
-			fmt.Printf("message_id %d\n", message_id)
-		}
 	}
 
 	return db
@@ -63,14 +65,16 @@ func build_big_db() *database.Database {
 func channels() {
 	db := build_big_db()
 	fmt.Println("Test channels html")
-	for i := range 50_000_001 {
-		s := html.ChannelsHtml(db)
-		if i%1_000_000 == 0 {
-			fmt.Println(i)
+	for i := range 1_000_000 {
+		var sb strings.Builder
+		html.ChannelsHtml(db, &sb)
+
+		if (i+1)%100_000 == 0 {
+			fmt.Println(i + 1)
 		}
 
-		if i%10_000_000 == 0 {
-			fmt.Println(s)
+		if i%200_000 == 0 {
+			fmt.Println(sb.String())
 		}
 	}
 }
@@ -115,5 +119,6 @@ func topics_and_messages() {
 }
 
 func main() {
-	topics_and_messages()
+	channels()
+	// topics_and_messages()
 }

@@ -4,6 +4,7 @@ import h "html"
 
 import (
 	"cmp"
+	"io"
 	"slices"
 	"strconv"
 	"strings"
@@ -15,9 +16,10 @@ import (
 
 type Database = database.Database
 
-func ChannelsHtml(db *Database) string {
-	var sb strings.Builder
+func ChannelsHtml(db *Database, writer io.StringWriter) {
 	rows := db.ChannelTable.Rows
+
+	w := writer.WriteString
 
 	indexes := make([]int, len(rows))
 	for i := range len(rows) {
@@ -31,12 +33,11 @@ func ChannelsHtml(db *Database) string {
 		)
 	})
 
-	p := sb.WriteString
 	Itoa := strconv.Itoa
 
-	p("<h4>")
-	p(Itoa(len(rows)))
-	p(" channels</h4>\n")
+	w("<h4>")
+	w(Itoa(len(rows)))
+	w(" channels</h4>\n")
 
 	for _, index := range indexes {
 		row := rows[index]
@@ -44,17 +45,15 @@ func ChannelsHtml(db *Database) string {
 		channel_id := Itoa(row.Id)
 		num_topics := Itoa(db.ChannelToAddress.Count(row.Index))
 
-		p("<div class='channel_row'>\n<div class='channel_name'>")
-		p(name)
-		p("</div>\n<div><a href='/topics/")
-		p(channel_id)
-		p(">topic</a></div>\n<div class='channel_count'>")
-		p(num_topics)
-		p(" topics</div>\n</div>\n")
-		p("\n")
+		w("<div class='channel_row'>\n<div class='channel_name'>")
+		w(name)
+		w("</div>\n<div><a href='/topics/")
+		w(channel_id)
+		w(">topic</a></div>\n<div class='channel_count'>")
+		w(num_topics)
+		w(" topics</div>\n</div>\n")
+		w("\n")
 	}
-
-	return sb.String()
 }
 
 func TopicsHtml(db *Database, channel_index int) string {
