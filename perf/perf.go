@@ -100,14 +100,20 @@ func topics_and_messages() {
 	db := build_big_db()
 	fmt.Println("Test topics html")
 	cnt := 0
+	counter := Counter{}
 
-	for range 100 {
+	for loop := range 200_000 {
+		if loop%10_000 == 0 {
+			fmt.Println(loop, "(outer loop)")
+		}
+
 		for i := range 20 {
 			channel_id := 100 + i
 			channel_index := db.ChannelTable.GetOrMakeIndex(channel_id)
-			// topics_html := html.TopicsHtml(db, channel_index)
 
-			for j := range 20 {
+			html.TopicsHtml(db, channel_id, &counter)
+
+			for j := range 0 {
 				subject := fmt.Sprintf("topic-%d", 1000+j)
 				topic_index := db.TopicTable.Put(subject)
 
@@ -131,9 +137,13 @@ func topics_and_messages() {
 			}
 		}
 	}
+
+	// sanity check
+	html.TopicsHtml(db, 101, os.Stdout)
+	fmt.Println(counter.cnt, "chars")
 }
 
 func main() {
-	channels()
-	// topics_and_messages()
+	// channels()
+	topics_and_messages()
 }

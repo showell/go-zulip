@@ -59,8 +59,11 @@ func ChannelsHtml(db *Database, writer io.StringWriter) {
 	}
 }
 
-func TopicsHtml(db *Database, channel_index int) string {
-	var sb strings.Builder
+func TopicsHtml(db *Database, channel_id int, writer io.StringWriter) {
+	w := writer.WriteString
+
+	channel_index := db.ChannelTable.GetOrMakeIndex(channel_id)
+	channel_name := db.ChannelTable.Rows[channel_index].Name
 
 	address_indexes := db.ChannelToAddress.GetManyIndexesInRandomOrder(channel_index)
 
@@ -90,29 +93,28 @@ func TopicsHtml(db *Database, channel_index int) string {
 		return cmp.Compare(a.topic_name, b.topic_name)
 	})
 
-	p := sb.WriteString
 	Itoa := strconv.Itoa
 
-	p("<h4>")
-	p(Itoa(topics_count))
-	p(" topics</h4>\n")
+	w("<h4>")
+	w(Itoa(topics_count))
+	w(" topics for ")
+	w(h.EscapeString(channel_name))
+	w("</h4>\n")
 
 	for _, row := range rows {
 		topic_name := h.EscapeString(row.topic_name)
 		address_index := Itoa(row.address_index)
 		message_count := Itoa(row.message_count)
 
-		p("<div class='topic_row'>\n<div class='topic_name'>")
-		p(topic_name)
-		p("</div>\n<div><a href='/topic_messages/")
-		p(address_index)
-		p(">topic</a></div>\n<div class='topic_count'>")
-		p(message_count)
-		p(" messages</div>\n</div>\n")
-		p("\n")
+		w("<div class='topic_row'>\n<div class='topic_name'>")
+		w(topic_name)
+		w("</div>\n<div><a href='/topic_messages/")
+		w(address_index)
+		w(">topic</a></div>\n<div class='topic_count'>")
+		w(message_count)
+		w(" messages</div>\n</div>\n")
+		w("\n")
 	}
-
-	return sb.String()
 }
 
 func MessagesHtml(db *Database, address_index int) string {

@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"slices"
@@ -188,9 +187,11 @@ func TestTopicsHtml(t *testing.T) {
 	addTestSubs(t, db)
 	addTestMessages(db, test_messages())
 
-	for i := range len(db.AddressTable.Rows) {
-		fmt.Println(html.TopicsHtml(db, i))
+	writer := bufio.NewWriter(os.Stdout)
+	for _, row := range db.ChannelTable.Rows {
+		html.TopicsHtml(db, row.Id, writer)
 	}
+	writer.Flush()
 }
 
 func TestMessages(t *testing.T) {
