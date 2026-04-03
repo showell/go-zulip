@@ -8,18 +8,27 @@ import (
 
 func TestPath(t *testing.T) {
 	{
-		var channels_address ChannelsAddress
+		var address ChannelsAddress
 		var sb strings.Builder
-		channels_address.WritePath(&sb)
+		address.WritePath(&sb)
 		assert.Equal(t, "/channels", sb.String())
 	}
 
 	{
-		topics_address := TopicsAddress{
+		address := TopicsAddress{
 			channel_index: 42,
 		}
 		var sb strings.Builder
-		topics_address.WritePath(&sb)
+		address.WritePath(&sb)
 		assert.Equal(t, "/topics/42", sb.String())
+	}
+
+	{
+		address := MessagesAddress{
+			address_index: 99,
+		}
+		var sb strings.Builder
+		address.WritePath(&sb)
+		assert.Equal(t, "/messages/99", sb.String())
 	}
 }
