@@ -53,18 +53,31 @@ func TestPath(t *testing.T) {
 			assert.True(t, ok)
 			assert.Equal(
 				t,
+				address,
 				topics_address,
-				TopicsAddress{channel_index: 42},
 			)
 		}
 	}
 
 	{
+		path := "/messages/99"
+
 		address := MessagesAddress{
 			address_index: 99,
 		}
 		var sb strings.Builder
 		address.WritePath(&sb)
-		assert.Equal(t, "/messages/99", sb.String())
+		assert.Equal(t, path, sb.String())
+
+		{
+			address := GetAddress(path)
+			messages_address, ok := address.(MessagesAddress)
+			assert.True(t, ok)
+			assert.Equal(
+				t,
+				address,
+				messages_address,
+			)
+		}
 	}
 }
