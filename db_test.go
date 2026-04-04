@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"slices"
@@ -178,7 +179,7 @@ func TestChannelsHtml(t *testing.T) {
 	addTestMessages(db, test_messages())
 
 	writer := bufio.NewWriter(os.Stdout)
-	html.ChannelsHtml(db, writer)
+	html.Html(db, "/channels", writer)
 	writer.Flush()
 }
 
@@ -189,7 +190,9 @@ func TestTopicsHtml(t *testing.T) {
 
 	writer := bufio.NewWriter(os.Stdout)
 	for _, row := range db.ChannelTable.Rows {
-		html.TopicsHtml(db, row.Id, writer)
+		channel_id := row.Id
+		path := fmt.Sprintf("/topics/%d", channel_id)
+		html.Html(db, path, writer)
 	}
 	writer.Flush()
 }

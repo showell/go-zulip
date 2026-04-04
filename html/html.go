@@ -181,3 +181,15 @@ func MessagesHtml(db *Database, address_index int, writer io.StringWriter) {
 	w(h.EscapeString(topic_name))
 	w("</h3>\n")
 }
+
+func Html(db *Database, path string, writer io.StringWriter) {
+	address := addr.GetAddress(path)
+	switch v := address.(type) {
+	case addr.ChannelsAddress:
+		ChannelsHtml(db, writer)
+	case addr.TopicsAddress:
+		TopicsHtml(db, v.ChannelId, writer)
+	default:
+		writer.WriteString("invalid path")
+	}
+}
