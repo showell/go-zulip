@@ -1,0 +1,5 @@
+{
+    "email": "you@example.com",
+    "api_key": "your_api_key_here",
+    "base_url": "https://yourorg.zulipchat.com"
+}
