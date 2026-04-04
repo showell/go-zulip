@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	"fmt"
 	"io"
 	"net/http"
@@ -13,6 +14,9 @@ import (
 	"go-zulip/server_types"
 	// "strings"
 )
+
+//go:embed style.css
+var styleCSS []byte
 
 type ServerMessage = servertypes.ServerMessage
 type ServerSubscription = servertypes.ServerSubscription
@@ -150,11 +154,18 @@ func (sw StringWriterForBytes) WriteString(s string) (int, error) {
 func webServer() {
 	db := buildBigDb()
 
+	http.HandleFunc("/style.css", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/css")
+		w.Write(styleCSS)
+	})
+
 	http.HandleFunc("/{path...}", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
 		stringWriter := StringWriterForBytes{w: w}
+		stringWriter.WriteString("<html><head><link rel='stylesheet' href='/style.css'></head><body>\n")
 		path := r.PathValue("path")
 		html.Html(db, "/"+path, stringWriter)
+		stringWriter.WriteString("</body></html>\n")
 	})
 
 	fmt.Println("Server starting on :8080...")

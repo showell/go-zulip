@@ -1,0 +1,37 @@
+.channel_row {
+    display: flex;
+    margin-bottom: 2px;
+}
+
+.channel_name {
+    width: 300px;
+}
+
+.channel_count {
+    text-align: right;
+    width: 150px;
+    color: #000080;
+}
+
+.topic_row {
+    display: flex;
+    margin-bottom: 2px;
+}
+
+.topic_name {
+    width: 300px;
+}
+
+.topic_count {
+    text-align: right;
+    width: 150px;
+    color: #000080;
+}
+
+.message_sender {
+    font-weight: bold;
+}
+
+pre {
+    margin-left: 100px;
+}
