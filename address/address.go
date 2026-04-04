@@ -21,7 +21,7 @@ type TopicsAddress struct {
 }
 
 type MessagesAddress struct {
-	address_index int
+	AddressIndex int
 }
 
 func (self NadaAddress) WritePath(w io.StringWriter) {
@@ -39,7 +39,7 @@ func (self TopicsAddress) WritePath(w io.StringWriter) {
 
 func (self MessagesAddress) WritePath(w io.StringWriter) {
 	w.WriteString("/messages/")
-	w.WriteString(strconv.Itoa(self.address_index))
+	w.WriteString(strconv.Itoa(self.AddressIndex))
 }
 
 var topicRegex = regexp.MustCompile(`/topics/(\d+)`)
@@ -62,7 +62,7 @@ func GetAddress(path string) Address {
 		if err != nil {
 			return NadaAddress{}
 		}
-		return MessagesAddress{address_index: address_index}
+		return MessagesAddress{AddressIndex: address_index}
 	}
 
 	return NadaAddress{}

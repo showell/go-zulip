@@ -63,7 +63,7 @@ func TestPath(t *testing.T) {
 		path := "/messages/99"
 
 		address := MessagesAddress{
-			address_index: 99,
+			AddressIndex: 99,
 		}
 		var sb strings.Builder
 		address.WritePath(&sb)
