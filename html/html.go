@@ -167,8 +167,7 @@ func MessagesHtml(db *Database, address_index int, writer io.StringWriter) {
 	w("</h4>\n")
 
 	for _, row := range rows {
-		// sender_name := h.EscapeString(row.sender_name)
-		sender_name := row.sender_name
+		sender_name := h.EscapeString(row.sender_name)
 		content := row.content // already valid HTML from server
 
 		w("<div class='message_sender'>")
