@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 )
 
@@ -136,7 +138,31 @@ func topics_and_messages() {
 	fmt.Println(counter.cnt, "chars")
 }
 
+type StringWriterForBytes struct {
+	w io.Writer
+}
+
+func (sw StringWriterForBytes) WriteString(s string) (int, error) {
+	sw.w.Write([]byte(s))
+	return 0, nil
+}
+
+func web_server() {
+	db := build_big_db()
+
+	http.HandleFunc("/{path...}", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html")
+		string_writer := StringWriterForBytes{w: w}
+		path := r.PathValue("path")
+		html.Html(db, "/"+path, string_writer)
+	})
+
+	fmt.Println("Server starting on :8080...")
+	http.ListenAndServe(":8080", nil)
+}
+
 func main() {
 	// channels()
-	topics_and_messages()
+	// topics_and_messages()
+	web_server()
 }
