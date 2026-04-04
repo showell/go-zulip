@@ -12,6 +12,7 @@ import (
 	"go-zulip/database"
 	"go-zulip/html"
 	"go-zulip/server_types"
+	"go-zulip/zulip"
 	// "strings"
 )
 
@@ -152,7 +153,11 @@ func (sw StringWriterForBytes) WriteString(s string) (int, error) {
 }
 
 func webServer() {
-	db := buildBigDb()
+	db, err := zulip.BuildDatabase("config.json")
+	if err != nil {
+		fmt.Printf("Error building database: %v\n", err)
+		return
+	}
 
 	http.HandleFunc("/style.css", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/css")
