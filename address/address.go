@@ -43,26 +43,26 @@ func (self MessagesAddress) WritePath(w io.StringWriter) {
 }
 
 var topicRegex = regexp.MustCompile(`/topics/(\d+)`)
-var topic_matches = topicRegex.FindStringSubmatch
+var topicMatches = topicRegex.FindStringSubmatch
 
 var messagesRegex = regexp.MustCompile(`/messages/(\d+)`)
-var messages_matches = messagesRegex.FindStringSubmatch
+var messagesMatches = messagesRegex.FindStringSubmatch
 
 func GetAddress(path string) Address {
 	if path == "/channels" {
 		return ChannelsAddress{}
-	} else if matches := topic_matches(path); matches != nil {
-		channel_id, err := strconv.Atoi(matches[1])
+	} else if matches := topicMatches(path); matches != nil {
+		channelId, err := strconv.Atoi(matches[1])
 		if err != nil {
 			return NadaAddress{}
 		}
-		return TopicsAddress{ChannelId: channel_id}
-	} else if matches := messages_matches(path); matches != nil {
-		address_index, err := strconv.Atoi(matches[1])
+		return TopicsAddress{ChannelId: channelId}
+	} else if matches := messagesMatches(path); matches != nil {
+		addressIndex, err := strconv.Atoi(matches[1])
 		if err != nil {
 			return NadaAddress{}
 		}
-		return MessagesAddress{AddressIndex: address_index}
+		return MessagesAddress{AddressIndex: addressIndex}
 	}
 
 	return NadaAddress{}

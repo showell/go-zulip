@@ -49,12 +49,12 @@ func TestPath(t *testing.T) {
 
 		{
 			address := GetAddress(path)
-			topics_address, ok := address.(TopicsAddress)
+			topicsAddress, ok := address.(TopicsAddress)
 			assert.True(t, ok)
 			assert.Equal(
 				t,
 				address,
-				topics_address,
+				topicsAddress,
 			)
 		}
 	}
@@ -71,12 +71,12 @@ func TestPath(t *testing.T) {
 
 		{
 			address := GetAddress(path)
-			messages_address, ok := address.(MessagesAddress)
+			messagesAddress, ok := address.(MessagesAddress)
 			assert.True(t, ok)
 			assert.Equal(
 				t,
 				address,
-				messages_address,
+				messagesAddress,
 			)
 		}
 	}
