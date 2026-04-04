@@ -197,6 +197,19 @@ func TestTopicsHtml(t *testing.T) {
 	writer.Flush()
 }
 
+func TestMessagesHtml(t *testing.T) {
+	db := database.NewDatabase()
+	addTestSubs(t, db)
+	addTestMessages(db, test_messages())
+
+	writer := bufio.NewWriter(os.Stdout)
+	for address_index := range db.AddressTable.Rows {
+		path := fmt.Sprintf("/messages/%d", address_index)
+		html.Html(db, path, writer)
+	}
+	writer.Flush()
+}
+
 func TestMessages(t *testing.T) {
 	db := database.NewDatabase()
 	messages := test_messages()

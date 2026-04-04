@@ -121,10 +121,11 @@ func MessagesHtml(db *Database, address_index int, writer io.StringWriter) {
 
 	address := db.AddressTable.Rows[address_index]
 	channel_index := address.ChannelIndex
+	channel_name := db.ChannelTable.Rows[channel_index].Name
 	topic_index := address.TopicIndex
 	topic_name := db.TopicTable.Rows[topic_index]
 
-	message_indexes := db.AddressToMessage.GetManyIndexesInRandomOrder(channel_index)
+	message_indexes := db.AddressToMessage.GetManyIndexesInRandomOrder(address_index)
 
 	message_count := len(message_indexes)
 
@@ -157,7 +158,9 @@ func MessagesHtml(db *Database, address_index int, writer io.StringWriter) {
 
 	w("<h4>")
 	w(Itoa(message_count))
-	w(" messages for ")
+	w(" messages for #")
+	w(h.EscapeString(channel_name))
+	w(" > ")
 	w(h.EscapeString(topic_name))
 	w("</h4>\n")
 
@@ -179,7 +182,7 @@ func MessagesHtml(db *Database, address_index int, writer io.StringWriter) {
 	w(Itoa(message_count))
 	w(" messages for ")
 	w(h.EscapeString(topic_name))
-	w("</h3>\n")
+	w("</h3>\n\n")
 }
 
 func Html(db *Database, path string, writer io.StringWriter) {
@@ -189,6 +192,8 @@ func Html(db *Database, path string, writer io.StringWriter) {
 		ChannelsHtml(db, writer)
 	case addr.TopicsAddress:
 		TopicsHtml(db, v.ChannelId, writer)
+	case addr.MessagesAddress:
+		MessagesHtml(db, v.AddressIndex, writer)
 	default:
 		writer.WriteString("invalid path")
 	}
