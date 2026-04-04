@@ -3,27 +3,27 @@ package database
 import "strings"
 
 type TopicTable struct {
-	Rows          []string
-	name_to_index map[string]int
+	Rows        []string
+	nameToIndex map[string]int
 }
 
 func NewTopicTable() *TopicTable {
 	return &TopicTable{
-		Rows:          make([]string, 0),
-		name_to_index: make(map[string]int),
+		Rows:        make([]string, 0),
+		nameToIndex: make(map[string]int),
 	}
 }
 
 func (table *TopicTable) Put(name string) int {
-	index, ok := table.name_to_index[name]
+	index, ok := table.nameToIndex[name]
 	if ok {
 		return index
 	}
 
-	new_index := len(table.Rows)
+	newIndex := len(table.Rows)
 
 	table.Rows = append(table.Rows, strings.Clone(name))
-	table.name_to_index[name] = new_index
+	table.nameToIndex[name] = newIndex
 
-	return new_index
+	return newIndex
 }

@@ -15,13 +15,13 @@ import (
 	"go-zulip/server_types"
 )
 
-type ServerMessage = server_types.ServerMessage
-type ServerSubscription = server_types.ServerSubscription
+type ServerMessage = servertypes.ServerMessage
+type ServerSubscription = servertypes.ServerSubscription
 
 func TestMessage(t *testing.T) {
-	message_table := database.NewMessageTable()
+	messageTable := database.NewMessageTable()
 
-	message_table.Put(database.Message{
+	messageTable.Put(database.Message{
 		MessageId:    1001,
 		SenderIndex:  200,
 		AddressIndex: 300,
@@ -37,21 +37,21 @@ func TestMessage(t *testing.T) {
 			AddressIndex: 300,
 			Content:      "message 1001",
 		},
-		*message_table.RowFromId(1001),
+		*messageTable.RowFromId(1001),
 	)
 }
 
 func TestOneToMany(t *testing.T) {
-	one_to_many := database.NewOneToMany()
+	oneToMany := database.NewOneToMany()
 
-	one_to_many.Update(0, 5)
-	one_to_many.Update(3, 30)
-	one_to_many.Update(2, 22)
-	one_to_many.Update(0, 7)
-	one_to_many.Update(0, 3)
+	oneToMany.Update(0, 5)
+	oneToMany.Update(3, 30)
+	oneToMany.Update(2, 22)
+	oneToMany.Update(0, 7)
+	oneToMany.Update(0, 3)
 
-	get := func(one_index int) []int {
-		lst := one_to_many.GetManyIndexesInRandomOrder(one_index)
+	get := func(oneIndex int) []int {
+		lst := oneToMany.GetManyIndexesInRandomOrder(oneIndex)
 		slices.Sort(lst)
 		return lst
 	}
@@ -61,7 +61,7 @@ func TestOneToMany(t *testing.T) {
 	assert.Equal(t, []int{22}, get(2))
 	assert.Equal(t, []int{30}, get(3))
 
-	assert.Equal(t, 3, one_to_many.Count(0))
+	assert.Equal(t, 3, oneToMany.Count(0))
 }
 
 func TestAddress(t *testing.T) {
@@ -109,12 +109,12 @@ func TestTopic(t *testing.T) {
 func addTestSubs(t *testing.T, db *database.Database) {
 	subs := []ServerSubscription{
 		{
-			Stream_id: 101,
-			Name:      "engineering",
+			StreamId: 101,
+			Name:     "engineering",
 		},
 		{
-			Stream_id: 102,
-			Name:      "design & frontend",
+			StreamId: 102,
+			Name:     "design & frontend",
 		},
 	}
 
@@ -127,42 +127,42 @@ func addTestSubs(t *testing.T, db *database.Database) {
 
 }
 
-func test_messages() []ServerMessage {
+func testMessages() []ServerMessage {
 	return []ServerMessage{
 		{
-			Content:          "message0",
-			Id:               201,
-			Sender_full_name: "Foo Barson",
-			Sender_id:        1001,
-			Subject:          "design stuff",
-			Stream_id:        102,
+			Content:        "message0",
+			Id:             201,
+			SenderFullName: "Foo Barson",
+			SenderId:       1001,
+			Subject:        "design stuff",
+			StreamId:       102,
 		},
 
 		{
-			Content:          "message1",
-			Id:               202,
-			Sender_full_name: "Foo Barson",
-			Sender_id:        1001,
-			Subject:          "design stuff",
-			Stream_id:        102,
+			Content:        "message1",
+			Id:             202,
+			SenderFullName: "Foo Barson",
+			SenderId:       1001,
+			Subject:        "design stuff",
+			StreamId:       102,
 		},
 
 		{
-			Content:          "message2",
-			Id:               203,
-			Sender_full_name: "Fred Flintstone",
-			Sender_id:        1002,
-			Subject:          "feedback & other stuff",
-			Stream_id:        101,
+			Content:        "message2",
+			Id:             203,
+			SenderFullName: "Fred Flintstone",
+			SenderId:       1002,
+			Subject:        "feedback & other stuff",
+			StreamId:       101,
 		},
 
 		{
-			Content:          "message3",
-			Id:               204,
-			Sender_full_name: "Fred Flintstone",
-			Sender_id:        1002,
-			Subject:          "another design topic",
-			Stream_id:        102,
+			Content:        "message3",
+			Id:             204,
+			SenderFullName: "Fred Flintstone",
+			SenderId:       1002,
+			Subject:        "another design topic",
+			StreamId:       102,
 		},
 	}
 }
@@ -176,7 +176,7 @@ func addTestMessages(db *database.Database, messages []ServerMessage) {
 func TestChannelsHtml(t *testing.T) {
 	db := database.NewDatabase()
 	addTestSubs(t, db)
-	addTestMessages(db, test_messages())
+	addTestMessages(db, testMessages())
 
 	writer := bufio.NewWriter(os.Stdout)
 	html.Html(db, "/channels", writer)
@@ -186,12 +186,12 @@ func TestChannelsHtml(t *testing.T) {
 func TestTopicsHtml(t *testing.T) {
 	db := database.NewDatabase()
 	addTestSubs(t, db)
-	addTestMessages(db, test_messages())
+	addTestMessages(db, testMessages())
 
 	writer := bufio.NewWriter(os.Stdout)
 	for _, row := range db.ChannelTable.Rows {
-		channel_id := row.Id
-		path := fmt.Sprintf("/topics/%d", channel_id)
+		channelId := row.Id
+		path := fmt.Sprintf("/topics/%d", channelId)
 		html.Html(db, path, writer)
 	}
 	writer.Flush()
@@ -200,11 +200,11 @@ func TestTopicsHtml(t *testing.T) {
 func TestMessagesHtml(t *testing.T) {
 	db := database.NewDatabase()
 	addTestSubs(t, db)
-	addTestMessages(db, test_messages())
+	addTestMessages(db, testMessages())
 
 	writer := bufio.NewWriter(os.Stdout)
-	for address_index := range db.AddressTable.Rows {
-		path := fmt.Sprintf("/messages/%d", address_index)
+	for addressIndex := range db.AddressTable.Rows {
+		path := fmt.Sprintf("/messages/%d", addressIndex)
 		html.Html(db, path, writer)
 	}
 	writer.Flush()
@@ -212,7 +212,7 @@ func TestMessagesHtml(t *testing.T) {
 
 func TestMessages(t *testing.T) {
 	db := database.NewDatabase()
-	messages := test_messages()
+	messages := testMessages()
 	addTestMessages(db, messages)
 	assert.Equal(t, "message0", messages[0].Content)
 	assert.Equal(

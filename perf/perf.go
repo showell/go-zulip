@@ -14,49 +14,49 @@ import (
 	// "strings"
 )
 
-type ServerMessage = server_types.ServerMessage
-type ServerSubscription = server_types.ServerSubscription
+type ServerMessage = servertypes.ServerMessage
+type ServerSubscription = servertypes.ServerSubscription
 
-func build_big_db() *database.Database {
+func buildBigDb() *database.Database {
 	db := database.NewDatabase()
 
 	nums := [20]int{17, 11, 4, 6, 14, 2, 9, 12, 1, 13, 19, 15, 5, 7, 10, 3, 8, 16, 18, 0}
 
 	for _, n := range nums {
-		channel_id := 100 + n
-		name := fmt.Sprintf("channel-%d", channel_id)
+		channelId := 100 + n
+		name := fmt.Sprintf("channel-%d", channelId)
 
 		subscription := ServerSubscription{
-			Stream_id: channel_id,
-			Name:      name,
+			StreamId: channelId,
+			Name:     name,
 		}
 		db.AddServerSubscription(subscription)
 	}
 
-	message_id := 0
+	messageId := 0
 
 	for range 1000 {
 		for _, n := range nums {
-			channel_id := 100 + n
+			channelId := 100 + n
 
-			for _, topic_n := range nums {
-				subject := fmt.Sprintf("topic-%d", 1000+topic_n)
+			for _, topicN := range nums {
+				subject := fmt.Sprintf("topic-%d", 1000+topicN)
 
-				message_id += 1
+				messageId += 1
 
-				if (message_id)%1_000 == 0 {
-					fmt.Printf("message_id %d\n", message_id)
+				if (messageId)%1_000 == 0 {
+					fmt.Printf("messageId %d\n", messageId)
 				}
 
-				content := fmt.Sprintf("content for %d", message_id)
+				content := fmt.Sprintf("content for %d", messageId)
 
 				message := ServerMessage{
-					Content:          content,
-					Id:               message_id,
-					Sender_full_name: "Foo Barson",
-					Sender_id:        1001,
-					Subject:          subject,
-					Stream_id:        channel_id,
+					Content:        content,
+					Id:             messageId,
+					SenderFullName: "Foo Barson",
+					SenderId:       1001,
+					Subject:        subject,
+					StreamId:       channelId,
 				}
 
 				db.AddServerMessage(message)
@@ -79,7 +79,7 @@ func (c *Counter) WriteString(s string) (int, error) {
 }
 
 func channels() {
-	db := build_big_db()
+	db := buildBigDb()
 	counter := Counter{}
 
 	fmt.Println("Test channels html")
@@ -96,10 +96,10 @@ func channels() {
 	html.ChannelsHtml(db, os.Stdout)
 }
 
-func topics_and_messages() {
+func topicsAndMessages() {
 	type AddressRow = database.AddressRow
 
-	db := build_big_db()
+	db := buildBigDb()
 	fmt.Println("Test topics html")
 	counter := Counter{}
 
@@ -112,22 +112,22 @@ func topics_and_messages() {
 		}
 
 		for i := range 20 {
-			channel_id := 100 + i
-			channel_index := db.ChannelTable.GetOrMakeIndex(channel_id)
+			channelId := 100 + i
+			channelIndex := db.ChannelTable.GetOrMakeIndex(channelId)
 
-			html.TopicsHtml(db, channel_id, &counter)
+			html.TopicsHtml(db, channelId, &counter)
 
 			for j := range 20 {
 				subject := fmt.Sprintf("topic-%d", 1000+j)
-				topic_index := db.TopicTable.Put(subject)
+				topicIndex := db.TopicTable.Put(subject)
 
-				address_row := AddressRow{
-					ChannelIndex: channel_index,
-					TopicIndex:   topic_index,
+				addressRow := AddressRow{
+					ChannelIndex: channelIndex,
+					TopicIndex:   topicIndex,
 				}
-				address_index := db.AddressTable.Put(address_row)
+				addressIndex := db.AddressTable.Put(addressRow)
 
-				html.MessagesHtml(db, address_index, &counter)
+				html.MessagesHtml(db, addressIndex, &counter)
 			}
 		}
 	}
@@ -147,14 +147,14 @@ func (sw StringWriterForBytes) WriteString(s string) (int, error) {
 	return 0, nil
 }
 
-func web_server() {
-	db := build_big_db()
+func webServer() {
+	db := buildBigDb()
 
 	http.HandleFunc("/{path...}", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
-		string_writer := StringWriterForBytes{w: w}
+		stringWriter := StringWriterForBytes{w: w}
 		path := r.PathValue("path")
-		html.Html(db, "/"+path, string_writer)
+		html.Html(db, "/"+path, stringWriter)
 	})
 
 	fmt.Println("Server starting on :8080...")
@@ -163,6 +163,6 @@ func web_server() {
 
 func main() {
 	// channels()
-	// topics_and_messages()
-	web_server()
+	// topicsAndMessages()
+	webServer()
 }

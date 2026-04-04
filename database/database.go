@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-type ServerMessage = server_types.ServerMessage
-type ServerSubscription = server_types.ServerSubscription
+type ServerMessage = servertypes.ServerMessage
+type ServerSubscription = servertypes.ServerSubscription
 
 type Database struct {
 	AddressTable AddressTable
@@ -35,7 +35,7 @@ func NewDatabase() *Database {
 }
 
 func (db *Database) AddServerSubscription(sub ServerSubscription) int {
-	id := sub.Stream_id
+	id := sub.StreamId
 	name := sub.Name
 	return db.ChannelTable.Put(IdName{
 		Id:   id,
@@ -43,38 +43,38 @@ func (db *Database) AddServerSubscription(sub ServerSubscription) int {
 	})
 }
 
-func (db *Database) AddServerMessage(server_message ServerMessage) {
-	channel_id := server_message.Stream_id
-	content := server_message.Content
-	message_id := server_message.Id
-	sender_id := server_message.Sender_id
-	sender_name := server_message.Sender_full_name
-	topic_name := server_message.Subject
+func (db *Database) AddServerMessage(serverMessage ServerMessage) {
+	channelId := serverMessage.StreamId
+	content := serverMessage.Content
+	messageId := serverMessage.Id
+	senderId := serverMessage.SenderId
+	senderName := serverMessage.SenderFullName
+	topicName := serverMessage.Subject
 
 	// Sender
-	sender_index := db.UserTable.Put(IdName{
-		Id:   sender_id,
-		Name: sender_name,
+	senderIndex := db.UserTable.Put(IdName{
+		Id:   senderId,
+		Name: senderName,
 	})
 
 	// Address
-	channel_index := db.ChannelTable.GetOrMakeIndex(channel_id)
-	topic_index := db.TopicTable.Put(topic_name)
-	address_index := db.AddressTable.Put(AddressRow{
-		ChannelIndex: channel_index,
-		TopicIndex:   topic_index,
+	channelIndex := db.ChannelTable.GetOrMakeIndex(channelId)
+	topicIndex := db.TopicTable.Put(topicName)
+	addressIndex := db.AddressTable.Put(AddressRow{
+		ChannelIndex: channelIndex,
+		TopicIndex:   topicIndex,
 	})
 
 	// Message
 	message := Message{
-		AddressIndex: address_index,
+		AddressIndex: addressIndex,
 		Content:      strings.Clone(content),
-		MessageId:    message_id,
-		SenderIndex:  sender_index,
+		MessageId:    messageId,
+		SenderIndex:  senderIndex,
 	}
-	message_index := db.MessageTable.Put(message)
+	messageIndex := db.MessageTable.Put(message)
 
 	// OneToMany optimizations
-	db.AddressToMessage.Update(address_index, message_index)
-	db.ChannelToAddress.Update(channel_index, address_index)
+	db.AddressToMessage.Update(addressIndex, messageIndex)
+	db.ChannelToAddress.Update(channelIndex, addressIndex)
 }

@@ -6,27 +6,27 @@ type AddressRow struct {
 }
 
 type AddressTable struct {
-	row_to_index map[AddressRow]int
-	Rows         []AddressRow
+	rowToIndex map[AddressRow]int
+	Rows       []AddressRow
 }
 
 func NewAddressTable() *AddressTable {
 	return &AddressTable{
-		row_to_index: make(map[AddressRow]int),
-		Rows:         make([]AddressRow, 0),
+		rowToIndex: make(map[AddressRow]int),
+		Rows:       make([]AddressRow, 0),
 	}
 }
 
 func (table *AddressTable) Put(row AddressRow) int {
-	index, ok := table.row_to_index[row]
+	index, ok := table.rowToIndex[row]
 	if ok {
 		return index
 	}
 
-	new_index := len(table.Rows)
+	newIndex := len(table.Rows)
 
 	table.Rows = append(table.Rows, row)
-	table.row_to_index[row] = new_index
+	table.rowToIndex[row] = newIndex
 
-	return new_index
+	return newIndex
 }

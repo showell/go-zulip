@@ -1,15 +1,15 @@
-package server_types
+package servertypes
 
 type ServerSubscription struct {
-	Stream_id int
-	Name      string
+	StreamId int
+	Name     string
 }
 
 type ServerMessage struct {
-	Content          string
-	Id               int
-	Sender_full_name string
-	Sender_id        int
-	Stream_id        int
-	Subject          string
+	Content        string
+	Id             int
+	SenderFullName string
+	SenderId       int
+	StreamId       int
+	Subject        string
 }

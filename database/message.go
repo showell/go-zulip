@@ -16,31 +16,31 @@ type MessageRow struct {
 }
 
 type MessageTable struct {
-	id_to_index map[int]int
-	Rows        []MessageRow
+	idToIndex map[int]int
+	Rows      []MessageRow
 }
 
 func NewMessageTable() *MessageTable {
 	return &MessageTable{
-		id_to_index: make(map[int]int),
-		Rows:        make([]MessageRow, 0),
+		idToIndex: make(map[int]int),
+		Rows:      make([]MessageRow, 0),
 	}
 }
 
 func (table *MessageTable) Put(message Message) int {
 	id := message.MessageId
 
-	index, ok := table.id_to_index[id]
+	index, ok := table.idToIndex[id]
 	if ok {
 		// for now we assume Messages never mutate
 		// and we just got a repeat
 		return index
 	}
 
-	new_index := len(table.Rows)
+	newIndex := len(table.Rows)
 
 	row := MessageRow{
-		Index:        new_index,
+		Index:        newIndex,
 		MessageId:    message.MessageId,
 		Content:      message.Content,
 		AddressIndex: message.AddressIndex,
@@ -48,13 +48,13 @@ func (table *MessageTable) Put(message Message) int {
 	}
 
 	table.Rows = append(table.Rows, row)
-	table.id_to_index[id] = new_index
+	table.idToIndex[id] = newIndex
 
-	return new_index
+	return newIndex
 }
 
 func (table MessageTable) RowFromId(id int) *MessageRow {
-	index, ok := table.id_to_index[id]
+	index, ok := table.idToIndex[id]
 	if !ok {
 		return nil
 	}

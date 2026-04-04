@@ -8,43 +8,43 @@ import (
 type IntSet = map[int]struct{}
 
 type OneToMany struct {
-	list_of_sets []IntSet
+	listOfSets []IntSet
 }
 
 func NewOneToMany() *OneToMany {
 	return &OneToMany{
-		list_of_sets: make([]IntSet, 0),
+		listOfSets: make([]IntSet, 0),
 	}
 }
 
-func (self *OneToMany) Update(one_index int, many_index int) {
-	for one_index >= len(self.list_of_sets) {
-		int_set := make(IntSet)
-		self.list_of_sets = append(self.list_of_sets, int_set)
+func (self *OneToMany) Update(oneIndex int, manyIndex int) {
+	for oneIndex >= len(self.listOfSets) {
+		intSet := make(IntSet)
+		self.listOfSets = append(self.listOfSets, intSet)
 	}
 
-	many_index_set := self.list_of_sets[one_index]
-	many_index_set[many_index] = struct{}{}
-	self.list_of_sets[one_index] = many_index_set
+	manyIndexSet := self.listOfSets[oneIndex]
+	manyIndexSet[manyIndex] = struct{}{}
+	self.listOfSets[oneIndex] = manyIndexSet
 }
 
-func (self OneToMany) GetManyIndexesInRandomOrder(one_index int) []int {
-	if one_index >= len(self.list_of_sets) {
+func (self OneToMany) GetManyIndexesInRandomOrder(oneIndex int) []int {
+	if oneIndex >= len(self.listOfSets) {
 		return []int{}
 	}
 
-	int_set := self.list_of_sets[one_index]
+	intSet := self.listOfSets[oneIndex]
 
-	if len(int_set) == 0 {
+	if len(intSet) == 0 {
 		return []int{}
 	}
 
-	return slices.Collect(maps.Keys(int_set))
+	return slices.Collect(maps.Keys(intSet))
 }
 
-func (self OneToMany) Count(one_index int) int {
-	if one_index >= len(self.list_of_sets) {
+func (self OneToMany) Count(oneIndex int) int {
+	if oneIndex >= len(self.listOfSets) {
 		return 0
 	}
-	return len(self.list_of_sets[one_index])
+	return len(self.listOfSets[oneIndex])
 }
