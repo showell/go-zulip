@@ -102,14 +102,16 @@ func TopicsHtml(db *Database, channel_id int, writer io.StringWriter) {
 
 	for _, row := range rows {
 		topic_name := h.EscapeString(row.topic_name)
-		address_index := Itoa(row.address_index)
+		address_index := row.address_index
 		message_count := Itoa(row.message_count)
+
+		messages_address := addr.MessagesAddress{AddressIndex: address_index}
 
 		w("<div class='topic_row'>\n<div class='topic_name'>")
 		w(topic_name)
-		w("</div>\n<div><a href='/topic_messages/")
-		w(address_index)
-		w(">topic</a></div>\n<div class='topic_count'>")
+		w("</div>\n<div><a href='")
+		messages_address.WritePath(writer)
+		w("'>messages</a></div>\n<div class='topic_count'>")
 		w(message_count)
 		w(" messages</div>\n</div>\n")
 		w("\n")
